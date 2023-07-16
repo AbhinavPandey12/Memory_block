@@ -1,3 +1,5 @@
+For Single Port RAM:
+
 timescale 1ns / 1ps
 module single_port_ram(data_in , ram_address,write_enable,clk,data_out);
 input [7:0]data_in;
@@ -20,3 +22,5 @@ end
 assign data_out = ram_memory[address_register];
 
 endmodule
+
+//For Dual port RAM
