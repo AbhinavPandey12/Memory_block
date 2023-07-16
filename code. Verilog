@@ -1,4 +1,4 @@
-For Single Port RAM:
+//For Single Port RAM:
 
 timescale 1ns / 1ps
 module single_port_ram(data_in , ram_address,write_enable,clk,data_out);
@@ -8,19 +8,41 @@ input write_enable;
 input clk;
 output [7:0]data_out;
 
-reg [7:0] ram_memory[31:0]; // a 32 byte ( 32*8 bit)  RAM  
+reg [7:0] ram_memory[31:0];             // a 32 byte ( 32*8 bit)  RAM  
 reg [5:0] address_register;
 
 always @(posedge clk)
 begin
-if (write_enable)  // write operation
+if (write_enable)                       // write operation
   ram_memory[ram_address] <= data_in;
 else 
   address_register <= ram_address;
 end
-
 assign data_out = ram_memory[address_register];
-
 endmodule
 
 //For Dual port RAM
+
+module RAM_param(clk, addr, read_write, clear, data_in, data_out);
+parameter n = 4;
+parameter w = 8;
+input clk, read_write, clear;
+input [n-1:0] addr;
+input [w-1:0] data_in;
+output reg [w-1:0] data_out;
+reg [w-1:0] reg_array [2**n-1:0];
+integer i;
+initial begin
+    for( i = 0; i < 2**n; i = i + 1 ) begin
+        reg_array[i] <= 0;
+    end
+end
+always @(negedge(clk)) begin
+    if( read_write == 1 )
+        reg_array[addr] <= data_in;
+    if( clear == 1 ) begin
+        for( i = 0; i < 2**n; i = i + 1 ) begin
+            reg_array[i] <= 0;
+       data_out = reg_array[addr];
+end
+endmodule  
